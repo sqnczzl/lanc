@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	<context:property-placeholder location="classpath*:casclient.properties"/>
+	
+	<!-- 该过滤器用于实现单点登出功能，可选配置。 -->
+	<bean name="singleSignOutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter"></bean>
+	
+	<!-- 该过滤器负责用户的认证工作，必须启用它 -->
+	<bean name="casAuthenticationFilter" class="org.jasig.cas.client.authentication.AuthenticationFilter">
+		<property name="casServerLoginUrl" value="${cas.client.casServerLoginUrl}"/>
+		<property name="serverName" value="${cas.client.serverName}"/>
+		<property name="renew" value="${cas.client.renew}"/>
+		<property name="gateway" value="${cas.client.gateway}"/>
+	</bean>
+	
+	<!-- 该过滤器负责对Ticket的校验工作，必须启用它 -->
+	<bean name="casticketValidationFilter" class="org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter">
+		<property name="serverName" value="${cas.client.serverName}"></property>
+		<property name="ticketValidator">
+			<bean class="org.jasig.cas.client.validation.Cas20ServiceTicketValidator">
+	            <constructor-arg index="0" value="${cas.client.casServerUrlPrefix}" />
+	            <property name="encoding" value="${cas.client.encoding}"/>
+	        </bean>
+        </property>
+	</bean>
+	
+	<!-- 该过滤器负责实现HttpServletRequest请求的包裹， 比如允许开发者通过HttpServletRequest的getRemoteUser()方法获得SSO登录用户的登录名，可选配置。 -->
+	<bean name="httpServletRequestWrapperFilter" class="org.jasig.cas.client.util.HttpServletRequestWrapperFilter"></bean>
+	
+	<!-- 该过滤器使得开发者可以通过org.jasig.cas.client.util.AssertionHolder来获取用户的登录名。 比如AssertionHolder.getAssertion().getPrincipal().getName()。 -->
+	<bean name="casAssertionThreadLocalFilter" class="org.jasig.cas.client.util.AssertionThreadLocalFilter"></bean>
+</beans>
