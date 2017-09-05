@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 增量更新索引的任务
  * 
- * @author zhangliang
+ * @author zhengzongliang
  *
  */
 public class DeltaImportHTTPPostScheduler extends BaseTimerTask {

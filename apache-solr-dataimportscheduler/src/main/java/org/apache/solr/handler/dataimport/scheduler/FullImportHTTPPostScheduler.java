@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 重做索引的任务
  * 
- * @author zhangliang
+ * @author zhengzongliang
  *
  */
 public class FullImportHTTPPostScheduler extends BaseTimerTask {
